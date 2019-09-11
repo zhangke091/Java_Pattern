@@ -1,0 +1,26 @@
+java 在写表达式时，转义符前要加上 \\
+实战1：
+
+  \\s*([^\"\']\\S*)\\s*
+
+这个正则表达式分析：
+
+\\s* : 匹配前后空白字符
+
+[^\"\'] : 不能以双引号和单引号开始
+
+\\S* : 匹配非空白字符
+
+该正则是用在zookeeper中解析命令用的，使用效果可以把命令的前后空格去掉，
+
+排除掉命令前的双引号和单引号，比如： "   'ls  "  不符合，"   ls ",会提取出ls字符串。
+
+代码实战：
+
+Pattern QUOTED_PATTERN = Pattern.compile("\\s*([^\"\']\\S*)\\s*");
+cmdString = "  ls     ";
+Matcher matcher = QUOTED_PATTERN.matcher(cmdString);
+if(matcher.matches())
+{
+  String value = matcher.group(1);  // value = "ls";
+}
